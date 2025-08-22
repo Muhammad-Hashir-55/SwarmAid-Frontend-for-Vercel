@@ -5,7 +5,11 @@ import Link from "next/link";
 export const metadata = {
   title: "SwarmAid",
   description: "AI-powered Disaster Response Dashboard",
+  icons: {
+    icon: "SwarmAid_logo.ico", // or /favicon.ico
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (
