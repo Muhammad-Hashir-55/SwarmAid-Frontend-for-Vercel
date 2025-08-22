@@ -26,7 +26,7 @@ export default function LandingPage() {
             href="/dashboard"
             className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold text-white"
           >
-            🚀 Launch Dashboard
+            Launch Dashboard
           </Link>
           <Link
             href="/about"
@@ -94,7 +94,7 @@ export default function LandingPage() {
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">⚡ FastAPI</div>
           <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">⚙️ LangChain</div>
-          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🤖 GPT-5 (AIML API)</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🧠 GPT-5 (AIML API)</div>
           <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🌍 Leaflet.js</div>
           <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🐦 Twitter/X API</div>
           <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🛰️ NASA EONET</div>
