@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <Link href="/" className="text-xl font-bold">SwarmAid</Link>
             <div className="flex gap-6 text-sm font-medium">
-              <Link href="/" className="hover:text-blue-400">Dashboard</Link>
+              <Link href="/dashboard" className="hover:text-blue-400">Dashboard</Link>
               <Link href="/about" className="hover:text-blue-400">About Us</Link>
             </div>
           </div>

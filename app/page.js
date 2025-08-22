@@ -1,177 +1,117 @@
+// app/page.js
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import "leaflet/dist/leaflet.css";
-import ReactMarkdown from "react-markdown";
-import { useMap } from "react-leaflet";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Brain, Activity, Map, Users, Github } from "lucide-react";
 
-const MapContainer = dynamic(() => import("react-leaflet").then((m) => m.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import("react-leaflet").then((m) => m.TileLayer), { ssr: false });
-const Polyline = dynamic(() => import("react-leaflet").then((m) => m.Polyline), { ssr: false });
-const Circle = dynamic(() => import("react-leaflet").then((m) => m.Circle), { ssr: false });
-const Popup = dynamic(() => import("react-leaflet").then((m) => m.Popup), { ssr: false });
-
-function ResetView({ features }) {
-  const map = useMap();
-  useState(() => {
-    if (!features || features.length === 0) return;
-    const bounds = [];
-    features.forEach((f) => {
-      if (f.geometry.type === "Point") {
-        bounds.push([f.geometry.coordinates[1], f.geometry.coordinates[0]]);
-      } else if (f.geometry.type === "LineString") {
-        f.geometry.coordinates.forEach((c) => bounds.push([c[1], c[0]]));
-      }
-    });
-    if (bounds.length > 0) {
-      map.fitBounds(bounds, { padding: [40, 40] });
-    }
-  }, [features, map]);
-  return null;
-}
-
-export default function Page() {
-  const [scenario, setScenario] = useState("");   // ✅ start empty
-  const [data, setData] = useState(null);
-  const [fetching, setFetching] = useState(false);
-  const [err, setErr] = useState("");
-
-  const runSimulate = async () => {
-    if (!scenario.trim()) {
-      setErr("⚠️ Please enter a scenario first.");
-      return;
-    }
-    setErr("");
-    setFetching(true);
-    try {
-      const url = `https://swarmaid.onrender.com/simulate?scenario=${encodeURIComponent(scenario)}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      setData(json);
-    } catch (e) {
-      setErr(`Could not fetch simulation. ${e?.message || e}. Check FastAPI & CORS.`);
-    } finally {
-      setFetching(false);
-    }
-  };
-
-  const features = data?.geojson?.features || [];
-
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-black text-gray-100">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-gray-900/70 backdrop-blur border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <h1 className="text-2xl md:text-3xl font-bold">SwarmAid Dashboard</h1>
-          <div className="flex gap-2">
-            <input
-              value={scenario}
-              onChange={(e) => setScenario(e.target.value)}
-              placeholder="Enter a scenario e.g. 'Tokyo earthquake'"
-              className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={runSimulate}
-              disabled={fetching || !scenario.trim()}
-              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-60 text-sm font-medium"
-            >
-              {fetching ? "Running..." : "Run Simulation"}
-            </button>
+    <div className="bg-black text-gray-100 min-h-screen flex flex-col">
+      {/* Hero Section */}
+      <section className="relative flex-1 flex flex-col items-center justify-center text-center px-6 py-20 bg-gradient-to-b from-gray-900 to-black">
+        <motion.h1
+          className="text-4xl md:text-6xl font-extrabold mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          SwarmAid: <span className="text-blue-500">AI for Disaster Response</span>
+        </motion.h1>
+        <p className="text-lg md:text-xl text-gray-300 max-w-2xl mb-8">
+          A multi-agent AI platform that simulates how Data Analysts, Medics, Logistics, 
+          and Critics work together to coordinate smarter crisis response.
+        </p>
+        <div className="flex gap-4">
+          <Link
+            href="/dashboard"
+            className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold text-white"
+          >
+            🚀 Launch Dashboard
+          </Link>
+          <Link
+            href="/about"
+            className="px-6 py-3 rounded-xl border border-gray-600 hover:border-blue-500 font-semibold"
+          >
+            Learn More
+          </Link>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 px-6 max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-12">How SwarmAid Helps</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="p-6 rounded-2xl bg-gray-900 border border-gray-800 shadow-lg hover:shadow-blue-600/20 transition">
+            <Brain className="h-10 w-10 text-blue-400 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Data Analyst Agent</h3>
+            <p className="text-gray-400 text-sm">
+              Uses NASA feeds & satellite data to identify disaster zones and 
+              vulnerable districts in real-time.
+            </p>
+          </div>
+          <div className="p-6 rounded-2xl bg-gray-900 border border-gray-800 shadow-lg hover:shadow-blue-600/20 transition">
+            <Activity className="h-10 w-10 text-red-400 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Medic Coordinator</h3>
+            <p className="text-gray-400 text-sm">
+              Analyzes social signals (e.g., Twitter) to triage urgent medical 
+              needs and detect overwhelmed hospitals.
+            </p>
+          </div>
+          <div className="p-6 rounded-2xl bg-gray-900 border border-gray-800 shadow-lg hover:shadow-blue-600/20 transition">
+            <Map className="h-10 w-10 text-green-400 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Logistics Manager</h3>
+            <p className="text-gray-400 text-sm">
+              Plans safe delivery routes using OpenRouteService/OSRM APIs to 
+              optimize transport of aid and supplies.
+            </p>
+          </div>
+          <div className="p-6 rounded-2xl bg-gray-900 border border-gray-800 shadow-lg hover:shadow-blue-600/20 transition">
+            <Users className="h-10 w-10 text-yellow-400 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Critic Agent</h3>
+            <p className="text-gray-400 text-sm">
+              Reviews and audits all plans to identify blind spots and improve 
+              resilience of the response strategy.
+            </p>
           </div>
         </div>
-      </header>
+      </section>
 
-      {/* Layout */}
-      <main className="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* Map */}
-        <section className="lg:col-span-7 xl:col-span-8 h-[70vh] rounded-2xl overflow-hidden border border-gray-800 bg-gray-900">
-          <MapContainer center={[20, 0]} zoom={2} scrollWheelZoom style={{ height: "100%", width: "100%" }}>
-            <TileLayer
-              attribution='&copy; OpenStreetMap &copy; CARTO'
-              url="https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-            />
+      {/* Mission Section */}
+      <section className="py-20 px-6 bg-gray-900 border-t border-gray-800">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
+          <p className="text-gray-300 leading-relaxed text-lg">
+            Disasters strike without warning. Our mission is to harness AI-powered agents, 
+            real-world data, and geospatial insights to assist first responders, NGOs, 
+            and governments in saving lives with speed and precision.
+          </p>
+        </div>
+      </section>
 
-            {features.map((f, i) => {
-              const type = f.properties?.type || "damage";
+      {/* Tech Stack */}
+      <section className="py-20 px-6 max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-12">Tech Behind SwarmAid</h2>
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">⚡ FastAPI</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">⚙️ LangChain</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🤖 GPT-5 (AIML API)</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🌍 Leaflet.js</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🐦 Twitter/X API</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🛰️ NASA EONET</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">🚚 OpenRouteService</div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">⚛️ Next.js + TailwindCSS</div>
+        </div>
+      </section>
 
-              if (type === "damage" || type === "triage") {
-                const [lon, lat] = f.geometry.coordinates;
-                const color = type === "damage" ? "#ef4444" : "#a855f7";
-                return (
-                  <Circle key={`pt-${i}`} center={[lat, lon]} radius={1000} pathOptions={{ color }}>
-                    <Popup>
-                      <div className="text-sm">
-                        <div className="font-semibold">{f.properties?.name}</div>
-                        <div>{type}</div>
-                      </div>
-                    </Popup>
-                  </Circle>
-                );
-              }
-
-              if (type === "route" && f.geometry.type === "LineString") {
-                const coords = f.geometry.coordinates.map((c) => [c[1], c[0]]);
-                return (
-                  <Polyline key={`ln-${i}`} positions={coords} pathOptions={{ color: "#3b82f6" }}>
-                    <Popup>
-                      <div className="text-sm font-semibold">{f.properties?.name || "Logistics Route"}</div>
-                    </Popup>
-                  </Polyline>
-                );
-              }
-
-              return null;
-            })}
-
-            <ResetView features={features} />
-          </MapContainer>
-        </section>
-
-        {/* Logs */}
-        <aside className="lg:col-span-5 xl:col-span-4 space-y-4">
-          <div className="rounded-2xl border border-gray-800 bg-gray-900">
-            <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Agent Logs</h2>
-              <span className="text-xs text-gray-400">
-                {data?.scenario ? `Scenario: ${data.scenario}` : "No scenario yet"}
-              </span>
-            </div>
-            {err && <div className="px-4 py-3 text-sm text-red-400 border-b border-gray-800">{err}</div>}
-            {!data && !err && <div className="px-4 py-6 text-sm text-gray-400">Waiting for results…</div>}
-            {data && (
-              <ul className="divide-y divide-gray-800">
-                {data.logs?.map((log, idx) => (
-                  <li key={idx} className="p-4">
-                    <div className="text-sm uppercase tracking-wide text-gray-400 mb-1">{log.agent}</div>
-                    <div className="prose prose-invert max-w-none text-sm leading-relaxed">
-                      <ReactMarkdown>{log.response}</ReactMarkdown>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {/* Legend */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
-            <h3 className="text-sm font-semibold mb-3">Legend</h3>
-            <div className="flex items-center gap-2 text-sm mb-2">
-              <span className="inline-block h-3 w-3 rounded-full" style={{ background: "#ef4444" }} />
-              <span>Damage Zones (Data Analyst)</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm mb-2">
-              <span className="inline-block h-3 w-3 rounded-full" style={{ background: "#a855f7" }} />
-              <span>Triage / Medical Clusters (Medic)</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="inline-block h-1 w-6" style={{ background: "#3b82f6" }} />
-              <span>Logistics Routes (Logistics Manager)</span>
-            </div>
-          </div>
-        </aside>
-      </main>
+      {/* Footer */}
+      <footer className="py-8 text-center border-t border-gray-800 text-gray-400 text-sm">
+        <p>
+          Built with ❤️ during Hackathon 2025 ·{" "}
+          <a href="https://github.com/" target="_blank" className="hover:text-blue-400 inline-flex items-center gap-1">
+            <Github className="h-4 w-4" /> GitHub Repo
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }
