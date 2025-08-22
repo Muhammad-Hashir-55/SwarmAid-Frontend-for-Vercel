@@ -103,15 +103,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 text-center border-t border-gray-800 text-gray-400 text-sm">
-        <p>
-          Built with ❤️ during Hackathon 2025 ·{" "}
-          <a href="https://github.com/" target="_blank" className="hover:text-blue-400 inline-flex items-center gap-1">
-            <Github className="h-4 w-4" /> GitHub Repo
-          </a>
-        </p>
-      </footer>
     </div>
   );
 }
